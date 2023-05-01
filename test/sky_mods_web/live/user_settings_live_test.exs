@@ -98,6 +98,7 @@ defmodule SkyModsWeb.UserSettingsLiveTest do
         form(lv, "#password_form", %{
           "current_password" => password,
           "user" => %{
+            "username" => user.username,
             "email" => user.email,
             "password" => new_password,
             "password_confirmation" => new_password

@@ -4,11 +4,9 @@ defmodule SkyMods.AccountsFixtures do
   entities via the `SkyMods.Accounts` context.
   """
 
-  def unique_user_email, do: "user#{System.unique_integer()}@example.com"
-  def valid_user_password, do: "hello world!"
-
   def valid_user_attributes(attrs \\ %{}) do
     Enum.into(attrs, %{
+      username: unique_username(),
       email: unique_user_email(),
       password: valid_user_password()
     })
@@ -28,4 +26,8 @@ defmodule SkyMods.AccountsFixtures do
     [_, token | _] = String.split(captured_email.text_body, "[TOKEN]")
     token
   end
+
+  def unique_username, do: "user_#{System.unique_integer([:positive])}"
+  def unique_user_email, do: "user#{System.unique_integer()}@example.com"
+  def valid_user_password, do: "hello world!"
 end

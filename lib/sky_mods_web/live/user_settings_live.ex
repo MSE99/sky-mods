@@ -49,6 +49,12 @@ defmodule SkyModsWeb.UserSettingsLive do
             id="hidden_user_email"
             value={@current_email}
           />
+          <.input
+            field={@password_form[:username]}
+            type="hidden"
+            id="username_user_email"
+            value={@current_username}
+          />
           <.input field={@password_form[:password]} type="password" label="New password" required />
           <.input
             field={@password_form[:password_confirmation]}
@@ -96,6 +102,7 @@ defmodule SkyModsWeb.UserSettingsLive do
       |> assign(:current_password, nil)
       |> assign(:email_form_current_password, nil)
       |> assign(:current_email, user.email)
+      |> assign(:current_username, user.username)
       |> assign(:email_form, to_form(email_changeset))
       |> assign(:password_form, to_form(password_changeset))
       |> assign(:trigger_submit, false)
