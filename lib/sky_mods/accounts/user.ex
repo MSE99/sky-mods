@@ -9,6 +9,7 @@ defmodule SkyMods.Accounts.User do
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
     field :avatar, :string, default: "avatar.png"
+    field :bio, :string, default: ""
 
     timestamps()
   end
@@ -130,6 +131,13 @@ defmodule SkyMods.Accounts.User do
     |> cast(attrs, [:password])
     |> validate_confirmation(:password, message: "does not match password")
     |> validate_password(opts)
+  end
+
+  def bio_changeset(user, attrs) do
+    user
+    |> cast(attrs, [:bio])
+    |> validate_required([:bio])
+    |> validate_length(:bio, max: 200)
   end
 
   @doc """

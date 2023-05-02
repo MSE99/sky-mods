@@ -192,6 +192,10 @@ defmodule SkyMods.Accounts do
     User.password_changeset(user, attrs, hash_password: false)
   end
 
+  def change_user_bio(user, attrs \\ %{}) do
+    User.bio_changeset(user, attrs)
+  end
+
   @doc """
   Updates the user password.
 
@@ -218,6 +222,12 @@ defmodule SkyMods.Accounts do
       {:ok, %{user: user}} -> {:ok, user}
       {:error, :user, changeset, _} -> {:error, changeset}
     end
+  end
+
+  def update_user_bio(user, attrs) do
+    user
+    |> User.bio_changeset(attrs)
+    |> Repo.update()
   end
 
   ## Session

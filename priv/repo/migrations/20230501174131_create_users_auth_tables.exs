@@ -8,6 +8,7 @@ defmodule SkyMods.Repo.Migrations.CreateUsersAuthTables do
       add :hashed_password, :string, null: false
       add :confirmed_at, :naive_datetime
       add :avatar, :string, null: false
+      add :bio, :string, null: false
 
       timestamps()
     end

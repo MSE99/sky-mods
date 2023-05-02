@@ -4,6 +4,8 @@ defmodule SkyModsWeb.ProfileLiveTest do
   import Phoenix.LiveViewTest
   import SkyMods.AccountsFixtures
 
+  alias SkyMods.Accounts
+
   setup do
     %{user: user_fixture()}
   end
@@ -19,7 +21,10 @@ defmodule SkyModsWeb.ProfileLiveTest do
   end
 
   test "should render the username of the user.", %{conn: conn, user: user} do
-    {:ok, _lv, html} = live(conn, ~p"/profiles/#{user.id}")
-    assert html =~ user.username
+    {:ok, target} = Accounts.update_user_bio(user, %{"bio" => "foo is great bar is null"})
+
+    {:ok, _lv, html} = live(conn, ~p"/profiles/#{target.id}")
+    assert html =~ target.username
+    assert html =~ target.bio
   end
 end

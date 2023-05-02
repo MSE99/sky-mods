@@ -23,7 +23,7 @@ defmodule SkyModsWeb.AccountsComponents do
       </h1>
 
       <p class="italic">
-        bio.
+        <%= @user.bio %>
       </p>
     </div>
     """
