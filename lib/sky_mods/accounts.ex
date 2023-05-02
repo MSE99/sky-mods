@@ -355,4 +355,8 @@ defmodule SkyMods.Accounts do
       {:error, :user, changeset, _} -> {:error, changeset}
     end
   end
+
+  def get_user(id) do
+    Repo.get(User, id)
+  end
 end

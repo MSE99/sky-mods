@@ -5,7 +5,6 @@ defmodule SkyModsWeb.HomeLiveTest do
 
   test "should render the home page", %{conn: conn} do
     {:ok, _, html} = live(conn, ~p"/")
-
-    assert html =~ "welcome"
+    assert html =~ "Welcome"
   end
 end
