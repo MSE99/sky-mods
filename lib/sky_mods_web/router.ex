@@ -32,6 +32,9 @@ defmodule SkyModsWeb.Router do
     live_session :require_authenticated_user,
       on_mount: [{SkyModsWeb.UserAuth, :ensure_authenticated}] do
       live "/users/settings", UserSettingsLive, :edit
+      live "/users/settings/update_email", UserSettingsLive, :update_email
+      live "/users/settings/update_password", UserSettingsLive, :update_password
+
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
     end
   end
