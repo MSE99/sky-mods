@@ -12,10 +12,7 @@ defmodule SkyModsWeb.AccountsComponents do
   def user_bio(assigns) do
     ~H"""
     <div class="flex flex-col justify-center items-center">
-      <img
-        src={"/images/#{@user.avatar}"}
-        class="max-w-xs rounded-full ring ring-6 ring-black ring-offset-2 mb-10"
-      />
+      <.user_avatar user={@user} />
 
       <h1 class="font-bold text-lg mb-4">
         <%= @user.username %>
@@ -26,6 +23,15 @@ defmodule SkyModsWeb.AccountsComponents do
         <%= @user.bio %>
       </p>
     </div>
+    """
+  end
+
+  def user_avatar(assigns) do
+    ~H"""
+    <img
+      src={"/images/#{@user.avatar}"}
+      class="max-w-xs rounded-full ring ring-6 ring-black ring-offset-2 mb-10"
+    />
     """
   end
 end

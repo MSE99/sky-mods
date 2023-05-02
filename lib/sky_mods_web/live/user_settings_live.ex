@@ -2,13 +2,48 @@ defmodule SkyModsWeb.UserSettingsLive do
   use SkyModsWeb, :live_view
 
   alias SkyMods.Accounts
+  alias SkyModsWeb.AccountsComponents
 
   def render(assigns) do
     ~H"""
-    <.header class="text-center">
-      Account Settings
-      <:subtitle>Manage your account email address and password settings</:subtitle>
-    </.header>
+    <AccountsComponents.user_bio user={@current_user} />
+
+    <ul class="my-10 bg-white p-5 shadow rounded-md">
+      <li class="flex items-center mb-2 border-b pb-2">
+        Username
+        <.button class="ml-auto">
+          update
+        </.button>
+      </li>
+
+      <li class="flex items-center mb-2 border-b pb-2">
+        Email
+        <.button class="ml-auto">
+          update
+        </.button>
+      </li>
+
+      <li class="flex items-center mb-2 border-b pb-2">
+        Password
+        <.button class="ml-auto">
+          update
+        </.button>
+      </li>
+
+      <li class="flex items-center mb-2 border-b pb-2">
+        Avatar image
+        <.button class="ml-auto">
+          update
+        </.button>
+      </li>
+
+      <li class="flex items-center">
+        Bio
+        <.button class="ml-auto">
+          update
+        </.button>
+      </li>
+    </ul>
 
     <div class="space-y-12 divide-y">
       <div>
