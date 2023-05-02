@@ -7,12 +7,14 @@ defmodule SkyModsWeb.UserSettingsLiveTest do
 
   describe "Settings page" do
     test "renders settings page", %{conn: conn} do
+      user = user_fixture()
+
       {:ok, _lv, html} =
         conn
-        |> log_in_user(user_fixture())
+        |> log_in_user(user)
         |> live(~p"/users/settings")
 
-      assert html =~ "Change Password"
+      assert html =~ user.username
     end
 
     test "redirects if user is not logged in", %{conn: conn} do
@@ -91,7 +93,7 @@ defmodule SkyModsWeb.UserSettingsLiveTest do
     test "updates the user password", %{conn: conn, user: user, password: password} do
       new_password = valid_user_password()
 
-      {:ok, lv, _html} = live(conn, ~p"/users/settings")
+      {:ok, lv, _html} = live(conn, ~p"/users/settings/update_password")
 
       form =
         form(lv, "#password_form", %{
@@ -119,7 +121,7 @@ defmodule SkyModsWeb.UserSettingsLiveTest do
     end
 
     test "renders errors with invalid data (phx-change)", %{conn: conn} do
-      {:ok, lv, _html} = live(conn, ~p"/users/settings")
+      {:ok, lv, _html} = live(conn, ~p"/users/settings/update_password")
 
       result =
         lv
@@ -138,7 +140,7 @@ defmodule SkyModsWeb.UserSettingsLiveTest do
     end
 
     test "renders errors with invalid data (phx-submit)", %{conn: conn} do
-      {:ok, lv, _html} = live(conn, ~p"/users/settings")
+      {:ok, lv, _html} = live(conn, ~p"/users/settings/update_password")
 
       result =
         lv

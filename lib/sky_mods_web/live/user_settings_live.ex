@@ -124,51 +124,6 @@ defmodule SkyModsWeb.UserSettingsLive do
         </:actions>
       </.simple_form>
     </.modal>
-
-    <div class="space-y-12 divide-y">
-      <div>
-        <.simple_form
-          for={@password_form}
-          id="password_form"
-          action={~p"/users/log_in?_action=password_updated"}
-          method="post"
-          phx-change="validate_password"
-          phx-submit="update_password"
-          phx-trigger-action={@trigger_submit}
-        >
-          <.input
-            field={@password_form[:email]}
-            type="hidden"
-            id="hidden_user_email"
-            value={@current_email}
-          />
-          <.input
-            field={@password_form[:username]}
-            type="hidden"
-            id="username_user_email"
-            value={@current_username}
-          />
-          <.input field={@password_form[:password]} type="password" label="New password" required />
-          <.input
-            field={@password_form[:password_confirmation]}
-            type="password"
-            label="Confirm new password"
-          />
-          <.input
-            field={@password_form[:current_password]}
-            name="current_password"
-            type="password"
-            label="Current password"
-            id="current_password_for_password"
-            value={@current_password}
-            required
-          />
-          <:actions>
-            <.button phx-disable-with="Changing...">Change Password</.button>
-          </:actions>
-        </.simple_form>
-      </div>
-    </div>
     """
   end
 
@@ -186,11 +141,15 @@ defmodule SkyModsWeb.UserSettingsLive do
   end
 
   def mount(_params, _session, socket) do
+    {:ok, socket}
+  end
+
+  def handle_params(_, _, socket) do
     user = socket.assigns.current_user
     email_changeset = Accounts.change_user_email(user)
     password_changeset = Accounts.change_user_password(user)
 
-    socket =
+    next_socket =
       socket
       |> assign(:current_password, nil)
       |> assign(:email_form_current_password, nil)
@@ -200,11 +159,7 @@ defmodule SkyModsWeb.UserSettingsLive do
       |> assign(:password_form, to_form(password_changeset))
       |> assign(:trigger_submit, false)
 
-    {:ok, socket}
-  end
-
-  def handle_params(_, _, socket) do
-    {:noreply, socket}
+    {:noreply, next_socket}
   end
 
   def handle_event("validate_email", params, socket) do
