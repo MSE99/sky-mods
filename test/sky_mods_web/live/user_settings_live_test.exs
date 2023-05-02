@@ -259,4 +259,51 @@ defmodule SkyModsWeb.UserSettingsLiveTest do
       assert render(lv) =~ "should be at least 3 character(s)"
     end
   end
+
+  describe "update bio form" do
+    setup %{conn: conn} do
+      user = user_fixture()
+      %{conn: log_in_user(conn, user), user: user}
+    end
+
+    test "updates the username", %{conn: conn} do
+      new_bio = unique_username()
+
+      {:ok, lv, _html} = live(conn, ~p"/users/settings/update_bio")
+
+      lv
+      |> form("#bio-form", %{
+        "user" => %{"bio" => new_bio}
+      })
+      |> render_submit()
+
+      assert render(lv) =~ new_bio
+    end
+
+    test "renders errors with invalid data (phx-change)", %{conn: conn} do
+      {:ok, lv, _html} = live(conn, ~p"/users/settings/update_bio")
+
+      result =
+        lv
+        |> element("#bio-form")
+        |> render_change(%{
+          "user" => %{"bio" => String.duplicate("foo", 100)}
+        })
+
+      assert result =~ "should be at most 200 character(s)"
+    end
+
+    test "renders errors with invalid data (phx-submit)", %{conn: conn} do
+      {:ok, lv, _html} = live(conn, ~p"/users/settings/update_bio")
+
+      result =
+        lv
+        |> form("#bio-form", %{
+          "user" => %{"bio" => String.duplicate("foo", 100)}
+        })
+        |> render_submit()
+
+      assert result =~ "should be at most 200 character(s)"
+    end
+  end
 end

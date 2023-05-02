@@ -36,6 +36,7 @@ defmodule SkyModsWeb.Router do
       live "/users/settings/update_email", UserSettingsLive, :update_email
       live "/users/settings/update_password", UserSettingsLive, :update_password
       live "/users/settings/update_username", UserSettingsLive, :update_username
+      live "/users/settings/update_bio", UserSettingsLive, :update_bio
 
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
     end

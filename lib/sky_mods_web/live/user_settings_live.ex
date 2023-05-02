@@ -23,6 +23,12 @@ defmodule SkyModsWeb.UserSettingsLive do
       trigger_submit={@trigger_submit}
     />
 
+    <.update_bio_modal
+      live_action={@live_action}
+      bio_form={@bio_form}
+      trigger_submit={@trigger_submit}
+    />
+
     <.update_password_modal
       live_action={@live_action}
       password_form={@password_form}
@@ -53,6 +59,26 @@ defmodule SkyModsWeb.UserSettingsLive do
 
   def handle_params(_, _, socket) do
     {:noreply, add_forms_with_user(socket, socket.assigns.current_user)}
+  end
+
+  def handle_event("validate_bio", %{"user" => update}, socket) do
+    form =
+      socket.assigns.current_user
+      |> Accounts.change_user_bio(update)
+      |> Map.put(:action, :validate)
+      |> to_form()
+
+    {:noreply, assign(socket, bio_form: form)}
+  end
+
+  def handle_event("update_bio", %{"user" => update}, socket) do
+    next_socket =
+      case Accounts.update_user_bio(socket.assigns.current_user, update) do
+        {:ok, user} -> socket |> add_forms_with_user(user) |> push_patch(to: ~p"/users/settings")
+        {:error, changeset} -> assign(socket, bio_form: to_form(changeset))
+      end
+
+    {:noreply, next_socket}
   end
 
   def handle_event("validate_username", params, socket) do
@@ -191,7 +217,7 @@ defmodule SkyModsWeb.UserSettingsLive do
 
       <li class="flex items-center">
         Bio
-        <.link patch={~p"/users/settings"} class="ml-auto">
+        <.link patch={~p"/users/settings/update_bio"} class="ml-auto">
           <.button>
             <.icon name="hero-pencil" />
           </.button>
@@ -326,10 +352,37 @@ defmodule SkyModsWeb.UserSettingsLive do
     """
   end
 
+  def update_bio_modal(assigns) do
+    ~H"""
+    <.modal
+      :if={@live_action == :update_bio}
+      id="update-bio-modal"
+      on_cancel={JS.patch(~p"/users/settings")}
+      show
+    >
+      <.simple_form
+        for={@bio_form}
+        id="bio-form"
+        method="post"
+        phx-change="validate_bio"
+        phx-submit="update_bio"
+        phx-trigger-action={@trigger_submit}
+      >
+        <.input field={@bio_form[:bio]} type="textarea" label="bio" autocomplete="off" required />
+
+        <:actions>
+          <.button phx-disable-with="Changing...">Change bio</.button>
+        </:actions>
+      </.simple_form>
+    </.modal>
+    """
+  end
+
   def add_forms_with_user(socket, user) do
     email_changeset = Accounts.change_user_email(user)
     password_changeset = Accounts.change_user_password(user)
     username_changeset = Accounts.change_user_username(user)
+    bio_changeset = Accounts.change_user_bio(user)
 
     socket
     |> assign(:current_password, nil)
@@ -340,6 +393,7 @@ defmodule SkyModsWeb.UserSettingsLive do
     |> assign(:email_form, to_form(email_changeset))
     |> assign(:password_form, to_form(password_changeset))
     |> assign(:username_form, to_form(username_changeset))
+    |> assign(:bio_form, to_form(bio_changeset))
     |> assign(:trigger_submit, false)
     |> assign(:current_user, user)
   end
