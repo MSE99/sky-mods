@@ -22,7 +22,7 @@ defmodule SkyModsWeb.Router do
 
     live_session :public_sections do
       live "/", HomeLive
-      live "/profile/:id", ProfileLive
+      live "/profiles/:id", ProfileLive
     end
   end
 

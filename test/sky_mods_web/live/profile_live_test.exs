@@ -9,17 +9,17 @@ defmodule SkyModsWeb.ProfileLiveTest do
   end
 
   test "should render a not found page if the user id is invalid.", %{conn: conn} do
-    {:ok, _lv, html} = live(conn, ~p"/profile/foo")
+    {:ok, _lv, html} = live(conn, ~p"/profiles/foo")
     assert html =~ "not found"
   end
 
   test "should render a not found page if the user is valid but was not found.", %{conn: conn} do
-    {:ok, _lv, html} = live(conn, ~p"/profile/150")
+    {:ok, _lv, html} = live(conn, ~p"/profiles/150")
     assert html =~ "not found"
   end
 
   test "should render the username of the user.", %{conn: conn, user: user} do
-    {:ok, _lv, html} = live(conn, ~p"/profile/#{user.id}")
+    {:ok, _lv, html} = live(conn, ~p"/profiles/#{user.id}")
     assert html =~ user.username
   end
 end

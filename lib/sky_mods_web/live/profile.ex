@@ -2,6 +2,7 @@ defmodule SkyModsWeb.ProfileLive do
   use SkyModsWeb, :live_view
 
   alias SkyMods.Accounts
+  alias SkyModsWeb.AccountsComponents
 
   def mount(_params, _session, socket) do
     {:ok, socket}
@@ -21,9 +22,7 @@ defmodule SkyModsWeb.ProfileLive do
     ~H"""
     <h1 :if={@target == nil}>not found</h1>
 
-    <div :if={@target}>
-      <%= @target.username %>
-    </div>
+    <AccountsComponents.user_bio :if={@target} user={@target} />
     """
   end
 end
