@@ -49,6 +49,10 @@ defmodule SkyMods.Accounts do
     if User.valid_password?(user, password), do: user
   end
 
+  def get_user_by_username(username) do
+    Repo.get_by(User, username: username)
+  end
+
   @doc """
   Gets a single user.
 
@@ -133,6 +137,13 @@ defmodule SkyMods.Accounts do
     |> Ecto.Changeset.apply_action(:update)
   end
 
+  def update_user_username(user, password, attrs) do
+    user
+    |> User.username_changeset(attrs)
+    |> User.validate_current_password(password)
+    |> Repo.update()
+  end
+
   @doc """
   Updates the user email using the given token.
 
@@ -194,6 +205,10 @@ defmodule SkyMods.Accounts do
 
   def change_user_bio(user, attrs \\ %{}) do
     User.bio_changeset(user, attrs)
+  end
+
+  def change_user_username(user, attrs \\ %{}) do
+    User.username_changeset(user, attrs)
   end
 
   @doc """

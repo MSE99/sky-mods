@@ -209,4 +209,54 @@ defmodule SkyModsWeb.UserSettingsLiveTest do
       assert message == "You must log in to access this page."
     end
   end
+
+  describe "update username form" do
+    setup %{conn: conn} do
+      password = valid_user_password()
+      user = user_fixture(%{password: password})
+      %{conn: log_in_user(conn, user), user: user, password: password}
+    end
+
+    test "updates the username", %{conn: conn, password: password} do
+      new_username = unique_username()
+
+      {:ok, lv, _html} = live(conn, ~p"/users/settings/update_username")
+
+      lv
+      |> form("#username_form", %{
+        "current_password" => password,
+        "user" => %{"username" => new_username}
+      })
+      |> render_submit()
+
+      assert Accounts.get_user_by_username(new_username)
+    end
+
+    test "renders errors with invalid data (phx-change)", %{conn: conn} do
+      {:ok, lv, _html} = live(conn, ~p"/users/settings/update_username")
+
+      lv
+      |> element("#username_form")
+      |> render_change(%{
+        "action" => "update_username",
+        "current_password" => "invalid",
+        "user" => %{"username" => "fo"}
+      })
+
+      assert render(lv) =~ "should be at least 3 character(s)"
+    end
+
+    test "renders errors with invalid data (phx-submit)", %{conn: conn} do
+      {:ok, lv, _html} = live(conn, ~p"/users/settings/update_username")
+
+      lv
+      |> form("#username_form", %{
+        "current_password" => "invalid",
+        "user" => %{"username" => "fo"}
+      })
+      |> render_submit()
+
+      assert render(lv) =~ "should be at least 3 character(s)"
+    end
+  end
 end
